@@ -9,3 +9,6 @@ edition = "2018"
 [build-dependencies]
 bindgen = "0.53.2"
 cc = "1.0.50"
+
+[features]
+ci = []

@@ -1,15 +1,12 @@
 const LUA_SHARED_DLL_PATH: &str =
     r#"F:\SteamLibrary\steamapps\common\GarrysMod\bin\win64\lua_shared.dll"#;
 
-use std::{
-    env,
-    fs::File,
-    io::Write,
-    path::{Path, PathBuf},
-    process::Command,
-};
+use std::{env, fs::File, io::Write, path::Path, process::Command};
 
 fn main() {
+    let out_dir = env::var("OUT_DIR").unwrap();
+    let out_dir = Path::new(&out_dir);
+
     let bindings = bindgen::Builder::default()
     .header("LuaJIT/src/lua.h")
     // Tell cargo to invalidate the built crate whenever any of the
@@ -24,40 +21,39 @@ fn main() {
     .generate()
     .expect("Unable to generate bindings");
 
-    // Write the bindings to the $OUT_DIR/bindings.rs file.
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file(out_dir.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 
-    let out_dir = env::var("OUT_DIR").unwrap();
-    let out_dir = Path::new(&out_dir);
-    let lua_shared_lib_path = out_dir.join("lua_shared.lib");
-    let lua_shared_def_path = out_dir.join("lua_shared.def");
-    let lua_shared_dll_path = Path::new(LUA_SHARED_DLL_PATH);
-
+    #[cfg(not(feature = "ci"))]
     {
-        let exports = get_exports(&lua_shared_dll_path);
+        let lua_shared_lib_path = out_dir.join("lua_shared.lib");
+        let lua_shared_def_path = out_dir.join("lua_shared.def");
+        let lua_shared_dll_path = Path::new(LUA_SHARED_DLL_PATH);
 
-        let mut lua_shared_def = File::create(&lua_shared_def_path).unwrap();
+        {
+            let exports = get_exports(&lua_shared_dll_path);
 
-        writeln!(lua_shared_def, "EXPORTS").unwrap();
-        for function_name in exports {
-            writeln!(lua_shared_def, "{}", function_name).unwrap();
+            let mut lua_shared_def = File::create(&lua_shared_def_path).unwrap();
+
+            writeln!(lua_shared_def, "EXPORTS").unwrap();
+            for function_name in exports {
+                writeln!(lua_shared_def, "{}", function_name).unwrap();
+            }
         }
+
+        assert!(get_tool("lib.exe")
+            .arg("/NOLOGO")
+            .arg("/MACHINE:x64")
+            .arg(format!("/DEF:{}", lua_shared_def_path.display()))
+            .arg(format!("/OUT:{}", lua_shared_lib_path.display()))
+            .status()
+            .unwrap()
+            .success());
+
+        println!("cargo:rustc-link-search=native={}", out_dir.display());
+        println!("cargo:rustc-link-lib=dylib=lua_shared");
     }
-
-    assert!(get_tool("lib.exe")
-        .arg("/NOLOGO")
-        .arg("/MACHINE:x64")
-        .arg(format!("/DEF:{}", lua_shared_def_path.display()))
-        .arg(format!("/OUT:{}", lua_shared_lib_path.display()))
-        .status()
-        .unwrap()
-        .success());
-
-    println!("cargo:rustc-link-search=native={}", out_dir.display());
-    println!("cargo:rustc-link-lib=dylib=lua_shared");
 }
 
 fn get_tool(name: &str) -> Command {
