@@ -8,16 +8,19 @@ fn main() {
     let out_dir = Path::new(&out_dir);
 
     let bindings = bindgen::Builder::default()
-    .header("LuaJIT/src/lua.h")
+    .header("LuaJIT/src/luajit.h")
     // Tell cargo to invalidate the built crate whenever any of the
     // included header files changed.
     .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-    .whitelist_var("luaL?_.*")
-    .whitelist_type("luaL?_.*")
-    .whitelist_function("luaL?_.*")
-    .whitelist_var("LUAL?_.*")
-    .whitelist_type("LUAL?_.*")
-    .whitelist_function("LUAL?_.*")
+
+    .whitelist_var("lua.*")
+    .whitelist_type("lua.*")
+    .whitelist_function("lua.*")
+
+    .whitelist_var("LUA.*")
+    .whitelist_type("LUA.*")
+    .whitelist_function("LUA.*")
+
     .generate()
     .expect("Unable to generate bindings");
 
