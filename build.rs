@@ -10,6 +10,7 @@ fn main() {
     let bindings = bindgen::Builder::default()
     .header("LuaJIT/src/luajit.h")
     .header("LuaJIT/src/lualib.h")
+    .header("LuaJIT/src/lauxlib.h")
     // Tell cargo to invalidate the built crate whenever any of the
     // included header files changed.
     .parse_callbacks(Box::new(bindgen::CargoCallbacks))
