@@ -2,6 +2,8 @@
 
 use crate::bindings::*;
 
+// lua.h
+
 // ===============================================================
 // some useful macros
 // ===============================================================
@@ -112,7 +114,7 @@ macro_rules! lua_getglobal {
 #[macro_export]
 macro_rules! lua_tostring {
     ($L:expr, $i:expr) => {
-        lua_tolstring($L, $i, NULL)
+        lua_tolstring($L, $i, ::std::ptr::null_mut())
     };
 }
 
