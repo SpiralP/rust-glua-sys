@@ -143,3 +143,147 @@ macro_rules! lua_getgccount {
 
 pub type lua_Chunkreader = lua_Reader;
 pub type lua_Chunkwriter = lua_Writer;
+
+// lauxlib.h
+
+#[macro_export]
+macro_rules! luaL_argcheck {
+    ($L:expr, $cond:expr, $numarg:expr, $extramsg:expr) => {
+        if !$cond {
+            luaL_argerror($L, $numarg, $extramsg)
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_checkstring {
+    ($L:expr, $n:expr) => {
+        luaL_checklstring($L, $n, ::std::ptr::null_mut())
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_optstring {
+    ($L:expr, $n:expr, $d:expr) => {
+        luaL_optlstring($L, $n, $d, ::std::ptr::null_mut())
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_checkint {
+    ($L:expr, $n:expr) => {
+        luaL_checkinteger($L, $n)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_optint {
+    ($L:expr, $n:expr, $d:expr) => {
+        luaL_optinteger($L, $n, $d)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_checklong {
+    ($L:expr, $n:expr) => {
+        luaL_checkinteger($L, $n)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_optlong {
+    ($L:expr, $n:expr, $d:expr) => {
+        luaL_optinteger($L, $n, $d)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_typename {
+    ($L:expr, $i:expr) => {
+        lua_typename($L, lua_type($L, $i))
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_dofile {
+    ($L:expr, $fn:expr) => {
+        if luaL_loadfile($L, $fn) == 0 {
+            lua_pcall($L, 0, LUA_MULTRET, 0);
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_dostring {
+    ($L:expr, $s:expr) => {
+        if luaL_loadstring($L, $s) == 0 {
+            lua_pcall($L, 0, LUA_MULTRET, 0);
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_getmetatable {
+    ($L:expr, $n:expr) => {
+        lua_getfield($L, LUA_REGISTRYINDEX, $n)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_opt {
+    ($L:expr, $f:expr, $n:expr, $d:expr) => {
+        if lua_isnoneornil($L, $n) {
+            $d
+        } else {
+            f($L, $n)
+        }
+    };
+}
+
+// From Lua 5.2.
+
+#[macro_export]
+macro_rules! luaL_newlibtable {
+    ($L:expr, $l:expr) => {
+        lua_createtable($L, 0, sizeof($l) / sizeof(($l)[0]) - 1)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_newlib {
+    ($L:expr, $l:expr) => {
+        luaL_newlibtable($L, $l);
+        luaL_setfuncs($L, $l, 0)
+    };
+}
+
+// {======================================================
+// Generic Buffer manipulation
+// =======================================================
+
+#[macro_export]
+macro_rules! luaL_addchar {
+    ($B:expr,$c:expr) => {
+        if $B.p >= $B.buffer + LUAL_BUFFERSIZE {
+            luaL_prepbuffer(B);
+        }
+        $B.p += 1;
+        *$B.p = c;
+    };
+}
+
+// compatibility only
+
+#[macro_export]
+macro_rules! luaL_putchar {
+    ($B:expr,$c:expr) => {
+        luaL_addchar($B, $c)
+    };
+}
+
+#[macro_export]
+macro_rules! luaL_addsize {
+    ($B:expr,$n:expr) => {
+        $B.p += $n
+    };
+}
