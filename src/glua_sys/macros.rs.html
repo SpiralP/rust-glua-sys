@@ -141,10 +141,14 @@
 <span id="141">141</span>
 <span id="142">142</span>
 <span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">bindings</span>::<span class="kw-2">*</span>;
+
+<span class="comment">// lua.h</span>
 
 <span class="comment">// ===============================================================</span>
 <span class="comment">// some useful macros</span>
@@ -256,7 +260,7 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">lua_tostring</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">L</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="ident">lua_tolstring</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">L</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>, <span class="ident">NULL</span>)
+        <span class="ident">lua_tolstring</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">L</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">i</span>, ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>())
     };
 }
 
