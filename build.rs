@@ -1,10 +1,4 @@
-use std::{
-    env,
-    fs::File,
-    io::Write,
-    path::{Path, PathBuf},
-    process::Command,
-};
+use std::{env, path::Path};
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
@@ -42,6 +36,13 @@ fn main() {
 fn link() {
     #[cfg(target_os = "windows")]
     {
+        use std::{
+            fs::File,
+            io::Write,
+            path::{Path, PathBuf},
+            process::Command,
+        };
+
         let out_dir = env::var("OUT_DIR").unwrap();
         let out_dir = Path::new(&out_dir);
 
