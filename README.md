@@ -1,6 +1,6 @@
 # glua-sys
 
-Rust bindings to Lua function exports
+Rust bindings to LuaJIT function exports
 
 ## Example
 
@@ -54,7 +54,7 @@ Windows will try to detect where your .dll is located and create a .lib to link 
 
 On Linux you can tell ld to link specifically to `lua_shared.so` without the "lib" prefix using the `-l:lua_shared.so` flag. (or you can try `patchelf --add-needed lua_shared.so`)
 
-Linux Srcds might not have `./garrysmod/bin` in the linker path to find `lua_shared_srv.so` so we use the `-Wl,-rpath,./garrysmod/bin` ld flag to fix this.
+Linux Srcds might not have `./garrysmod/bin` in the linker path to find `lua_shared_srv.so` so we use the `-Wl,-rpath,./garrysmod/bin` ld flag to fix this. Also replace any reference in this README of `lua_shared.so` with `lua_shared_srv.so` for servers!
 
 You can also try messing with `LD_LIBRARY_PATH` when running `srcds_linux`.
 
