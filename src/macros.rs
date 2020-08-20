@@ -47,43 +47,43 @@ macro_rules! lua_strlen {
 #[macro_export]
 macro_rules! lua_isfunction {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TFUNCTION
+        lua_type($L, $n) == LUA_TFUNCTION as _
     };
 }
 #[macro_export]
 macro_rules! lua_istable {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TTABLE
+        lua_type($L, $n) == LUA_TTABLE as _
     };
 }
 #[macro_export]
 macro_rules! lua_islightuserdata {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TLIGHTUSERDATA
+        lua_type($L, $n) == LUA_TLIGHTUSERDATA as _
     };
 }
 #[macro_export]
 macro_rules! lua_isnil {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TNIL
+        lua_type($L, $n) == LUA_TNIL as _
     };
 }
 #[macro_export]
 macro_rules! lua_isboolean {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TBOOLEAN
+        lua_type($L, $n) == LUA_TBOOLEAN as _
     };
 }
 #[macro_export]
 macro_rules! lua_isthread {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TTHREAD
+        lua_type($L, $n) == LUA_TTHREAD as _
     };
 }
 #[macro_export]
 macro_rules! lua_isnone {
     ($L:expr, $n:expr) => {
-        lua_type($L, $n) == LUA_TNONE
+        lua_type($L, $n) == LUA_TNONE as _
     };
 }
 #[macro_export]
