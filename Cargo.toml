@@ -7,10 +7,10 @@ edition = "2018"
 [dependencies]
 
 [build-dependencies]
-bindgen = "0.54.1"
+bindgen = "0.55.1"
 
 [target.'cfg(windows)'.build-dependencies]
-cc = "1.0.58"
+cc = "1.0.61"
 
 [features]
 ci = []

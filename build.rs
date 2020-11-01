@@ -5,23 +5,18 @@ fn main() {
     let out_dir = Path::new(&out_dir);
 
     let bindings = bindgen::Builder::default()
-    .header("LuaJIT/src/luajit.h")
-    .header("LuaJIT/src/lualib.h")
-    .header("LuaJIT/src/lauxlib.h")
-    // Tell cargo to invalidate the built crate whenever any of the
-    // included header files changed.
-    .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-
-    .whitelist_var("lua.*")
-    .whitelist_type("lua.*")
-    .whitelist_function("lua.*")
-
-    .whitelist_var("LUA.*")
-    .whitelist_type("LUA.*")
-    .whitelist_function("LUA.*")
-
-    .generate()
-    .expect("Unable to generate bindings");
+        .header("LuaJIT/src/luajit.h")
+        .header("LuaJIT/src/lualib.h")
+        .header("LuaJIT/src/lauxlib.h")
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .whitelist_var("lua.*")
+        .whitelist_type("lua.*")
+        .whitelist_function("lua.*")
+        .whitelist_var("LUA.*")
+        .whitelist_type("LUA.*")
+        .whitelist_function("LUA.*")
+        .generate()
+        .expect("Unable to generate bindings");
 
     bindings
         .write_to_file(out_dir.join("bindings.rs"))
@@ -36,12 +31,7 @@ fn main() {
 fn link() {
     #[cfg(target_os = "windows")]
     {
-        use std::{
-            fs::File,
-            io::Write,
-            path::{Path, PathBuf},
-            process::Command,
-        };
+        use std::{fs::File, io::Write, path::PathBuf, process::Command};
 
         let out_dir = env::var("OUT_DIR").unwrap();
         let out_dir = Path::new(&out_dir);

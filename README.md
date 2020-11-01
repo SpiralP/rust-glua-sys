@@ -66,4 +66,8 @@ fn main() {
     println!("cargo:rustc-cdylib-link-arg=-Wl,-rpath,./garrysmod/bin");
     println!("cargo:rustc-cdylib-link-arg=-l:lua_shared.so");
 }
+
+
+#[link(name = ":lua_shared.so")]
+// can also cheat this way
 ```
