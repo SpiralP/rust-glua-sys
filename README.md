@@ -11,7 +11,7 @@ Add this to `Cargo.toml`:
 crate-type = ["cdylib"]
 
 [dependencies]
-classicube-sys = { git = "https://github.com/SpiralP/rust-glua-sys.git" }
+glua-sys = { git = "https://github.com/SpiralP/rust-glua-sys.git" }
 ```
 
 `lib.rs`:
