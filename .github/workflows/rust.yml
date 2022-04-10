@@ -2,6 +2,13 @@ name: Rust
 
 on: [push]
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   windows:
     runs-on: windows-latest
@@ -13,7 +20,9 @@ jobs:
 
       - name: Install deps
         run: |
-          iwr -useb get.scoop.sh | iex
+          iwr -useb get.scoop.sh -outfile install-scoop.ps1
+          .\install-scoop.ps1 -RunAsAdmin
+          rm install-scoop.ps1
           echo "$HOME\scoop\shims" >> $env:GITHUB_PATH
           echo "C:\ProgramData\scoop\shims" >> $env:GITHUB_PATH
           scoop install aria2
